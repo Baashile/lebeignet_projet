@@ -1,0 +1,25 @@
+{# templates/admin/webapp/show.html.twig #}
+{% extends 'admin/layout.html.twig' %}
+
+{% block admin_content %}
+<div class="container mt-4">
+    <h1>Détails de l'élément </h1>
+    <table class="table table-bordered">
+        <tr>
+            <th>ID</th>
+            <td>{{ element.id }}</td>
+        </tr>
+        <tr>
+            <th>Nom</th>
+            <td>{{ element.nom }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ element.description }}</td>
+        </tr>
+        <!-- Ajoutez d'autres champs si nécessaire -->
+    </table>
+    <a href="{{ path('admin_edit', {id: element.id}) }}" class="btn btn-warning">Modifier</a>
+    <a href="{{ path('admin_delete', {id: element.id}) }}" class="btn btn-danger">Supprimer</a>
+</div>
+{% endblock %}

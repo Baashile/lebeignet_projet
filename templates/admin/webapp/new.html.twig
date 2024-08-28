@@ -1,0 +1,31 @@
+{# templates/admin/webapp/new.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer une nouvelle commande{% endblock %}
+
+{% block body %}
+    <h1>Créer une nouvelle commande</h1>
+
+    {{ form_start(form) }}
+    {{ form_row(form.etat) }}
+    {{ form_row(form.montantTotal) }}
+    {{ form_row(form.statutPaiement) }}
+    {{ form_row(form.methodeLivraison) }}
+    {{ form_row(form.dateCommande) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.client) }} 
+    {{ form_row(form.utilisateur) }}
+
+    <button type="submit" class="btn btn-success">Créer</button>
+    {{ form_end(form) }}
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    <div class="mt-3 mb-3">
+        <a href="{{ path('app_commandes') }}" class="btn btn-secondary d-inline-block">Retour à la liste</a>
+        <a href="{{ path('app_client_new') }}" class="btn btn-primary d-inline-block">Ajouter un nouveau client</a>
+    </div>
+{% endblock %}

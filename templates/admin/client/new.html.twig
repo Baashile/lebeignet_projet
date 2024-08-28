@@ -1,0 +1,21 @@
+{# templates/admin/client/new.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouveau client{% endblock %}
+
+{% block body %}
+    <h1>Créer un nouveau client</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.nom) }}
+        {{ form_row(form.prenom) }}
+        {{ form_row(form.adresse) }}
+        {{ form_row(form.numeroTelephone) }}
+        {{ form_row(form.email) }}
+        
+        <button type="submit" class="btn btn-success">Créer</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_commandes_new') }}">Retour à la création de commande</a>
+{% endblock %}

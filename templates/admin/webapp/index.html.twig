@@ -1,0 +1,30 @@
+{# templates/admin/webapp/index.html.twig #}
+{% extends 'admin/layout.html.twig' %}
+
+{% block admin_content %}
+<div class="container mt-4">
+    <h1>Liste des éléments</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for element in elements %}
+                <tr>
+                    <td>{{ element.id }}</td>
+                    <td>{{ element.nom }}</td>
+                    <td>
+                        <a href="{{ path('admin_show', {id: element.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                        <a href="{{ path('admin_edit', {id: element.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        <a href="{{ path('admin_delete', {id: element.id}) }}" class="btn btn-danger btn-sm">Supprimer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

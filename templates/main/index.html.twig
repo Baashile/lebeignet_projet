@@ -1,0 +1,78 @@
+{# templates/main/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Commandes{% endblock %}
+
+{% block body %}
+    <h1>Liste des commandes</h1>
+    
+    <div class="container">
+
+        {# Affichage des messages Flash #}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nom client</th>
+                    <th scope="col">Date commande</th>
+                    <th scope="col">État</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for commande in commandes %}
+                    <tr>
+                        <th scope="row">{{ commande.id }}</th>
+                        <td>{{ commande.client.nom }}</td>
+                        <td>{{ commande.dateCommande|date('d/m/y') }}</td>
+                        <td>{{ commande.etat }}</td>
+                        <td>
+                            <a href="{{ path('app_commandes_show', {'id': commande.id}) }}" class="btn btn-info btn-sm">Voir</a>
+
+                            {# Bouton Modifier #}
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('app_commandes_edit', {'id': commande.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                            {% else %}
+                                <a href="#" class="btn btn-warning btn-sm disabled" tabindex="-1" aria-disabled="true">Modifier</a>
+                            {% endif %}
+
+                            {# Formulaire Supprimer avec confirmation JavaScript #}
+                            <form method="post" action="{{ path('app_commandes_delete', {'id': commande.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette commande ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commande.id) }}">
+                                <button class="btn btn-danger btn-sm" type="submit" {% if not is_granted('ROLE_ADMIN') %}disabled{% endif %}>Supprimer</button>
+                            </form>
+
+                            {# Formulaire Archiver avec confirmation JavaScript #}
+                            {% if not commande.archived %}
+                                <form method="post" action="{{ path('app_commandes_archive', {'id': commande.id}) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir archiver cette commande ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ commande.id) }}">
+                                    <button class="btn btn-secondary btn-sm" type="submit" {% if not is_granted('ROLE_ADMIN') %}disabled{% endif %}>Archiver</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">Aucune commande trouvée</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {# Bouton Ajouter une commande #}
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_commandes_new') }}" class="btn btn-primary">Ajouter une commande</a>
+        {% else %}
+            <a href="#" class="btn btn-primary disabled" tabindex="-1" aria-disabled="true">Ajouter une commande</a>
+        {% endif %}
+    </div>
+{% endblock %}

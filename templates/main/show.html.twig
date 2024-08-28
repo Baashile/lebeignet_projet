@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la Commande{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Détails de la Commande</h1>
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <th scope="row">ID</th>
+                <td>{{ commande.id }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Nom du Client</th>
+                <td>{{ commande.client.nom }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Etat</th>
+                <td>{{ commande.etat }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Statut du Paiement</th>
+                <td>{{ commande.statutPaiement }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Montant Total</th>
+                <td>{{ commande.montantTotal }} CHF</td>
+            </tr>
+            <tr>
+                <th scope="row">Date de la Commande</th>
+                <td>{{ commande.dateCommande|date('d/m/Y') }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="{{ path('app_commandes') }}" class="btn btn-secondary">Retour à la liste</a>
+</div>
+{% endblock %}

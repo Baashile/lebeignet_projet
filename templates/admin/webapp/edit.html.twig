@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{# templates/admin/webapp/ #}
+{% block title %}Modifier Commande{% endblock %}
+
+{% block body %}
+    <h1>Modifier la commande #{{ commande.id }}</h1>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-primary">Enregistrer les modifications</button>
+    {{ form_end(form) }}
+    <a href="{{ path('app_commandes') }}" class="btn btn-secondary">Retour à la liste</a>
+{% endblock %}

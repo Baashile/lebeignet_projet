@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}WebApp{% endblock %}
+    </title>
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        <style>
+            .background-wrapper {
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                z-index: -1;
+                overflow: hidden;
+            }
+
+            .background-wrapper img {
+                filter: blur(var(--value, 1rem));
+                --value: 4px;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .form-container {
+                background: rgba(255, 255, 255, 0.8);
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+        </style>
+    {% endblock %}
+</head>
+<body>
+    {% if not is_granted('ROLE_USER') %}
+        <div class="background-wrapper">
+            <img src="{{ asset('images/bgnt.jpg') }}" class="img-fluid" alt="Background leBeignetCestBon">
+        </div>
+    {% endif %}
+
+    <nav class="navbar bg-secondary navbar-expand-lg" data-bs-theme="dark">
+        <div class="container-fluid">
+            <a style="color:#012c92;" class="navbar-brand" href="#">
+            <img src="{{ asset('images/favicon_lebgnt.svg') }}" alt="" width="30" height="24">
+            LeBeignet C'est Bon ! La WebApp
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                {% if is_granted('ROLE_USER') %}
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a style="color:#012c92;" class="nav-link active" aria-current="page" href="#"></a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown-menu-dark">
+                            <a style="color:#012c92;" class="nav-link active dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                {{ app.user.nom }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="bi bi-gear me-2"></i> Paramètres
+                                    </a>
+                                </li>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="bi bi-person-add me-2"></i> User Management
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ path('app_logout') }}">
+                                        <i class="bi bi-box-arrow-left me-2"></i> Déconnexion
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                {% else %}
+                    <ul class="navbar-nav">
+                        
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    {% block body %}{% endblock %}
+</body>
+</html>

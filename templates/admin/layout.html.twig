@@ -1,0 +1,13 @@
+{# templates/admin/layout.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration{% endblock %}
+
+{% block body %}
+    <div class="admin-container">
+        {% include 'navbar.html.twig' %}
+        <div class="admin-content">
+            {% block admin_content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}
