@@ -1,0 +1,27 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;
+}
+
+footer {
+    background-color: #f8f9fa;
+    padding: 20px;
+    text-align: center;
+}
+
+footer a {
+    color: white; /* Assure que les liens sont aussi blancs */
+}
+
+footer a:hover {
+    color: #dcdcdc; /* Optionnel : change la couleur au survol pour améliorer la lisibilité */
+}
