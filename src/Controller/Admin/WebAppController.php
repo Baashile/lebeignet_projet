@@ -20,13 +20,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/admin/webapp', name: 'admin_webapp_')]
 final class WebAppController extends AbstractController
 {
-    // gestion du CRUD
+    // ::::: gestion du CRUD + Valadation dufomulaire garantir que les données sont correctement saisies + Sécurisation avec gestion des rôles :::::::
     // CRUD : LECTURE
 
     #[Route('', name: 'index', methods: ['GET'])]
     public function index(CommandeRepository $repository): Response
     {
-        $Commandes = $repository->findAll();
+        //$Commandes = $repository->findAll();
+        // Je récupère toutes les commandes qui ne sont pas archivées (archived = false)
+        // ::::: Pour des raisons de sécurité, il est préférable de ne pas récupérer toutes les commandes de la base de données à la fois, car cela peut prendre du temps et potentiellement causer des problèmes de performances si vous avez beaucoup de données.
+        // ::::: En revanche, il est possible de récupérer les commandes archivées à la volée à l'aide d'une requête spécifique.
+        // ---- corr --- pour récupérer uniquement les commandes non archivées, on utilise le findby() avec une condition sur le champ archived (ici, on utilise false)
+        $Commandes = $repository->findActived();
         return $this->render(
             'admin/webapp/index.html.twig',
             [
@@ -42,14 +47,20 @@ final class WebAppController extends AbstractController
 public function create(Request $request, EntityManagerInterface $em): Response
 {
     $commande = new Commande();
+    /* Le formulaire est créé à partir de la classe CommandeType et associé à l'objet $commande.
+handleRequest() gère automatiquement la soumission du formulaire et met à jour l'objet $commande avec les données soumises, si le formulaire a été envoyé.
+ */
     $form = $this->createForm(CommandeType::class, $commande);
 
-    $form->handleRequest($request);
+    $form->handleRequest($request); // gère automatiquement la soumission du formulaire
 
     return $this->json(['submit' => $form->isSubmitted(),'valid'=>$form->isValid()]);
 
 
     if ($form->isSubmitted() && $form->isValid()) {
+/* Récupération du client existant ou du nouveau clientSi le formulaire est soumis et valide, le code récupère les données du champ client_existant.
+Si un client existant est sélectionné, il est associé à la commande.
+Si aucun client n'est sélectionné, un message d'erreur est affiché, et le formulaire est renvoyé à l'utilisateur pour qu'il puisse corriger sa sélection. */
         // Gestion des clients existants ou nouveaux
         $clientExistant = $form->get('client_existant')->getData();
 
@@ -86,7 +97,7 @@ public function create(Request $request, EntityManagerInterface $em): Response
     #[Route('/edit/{id}', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Commande $commande, Request $request, EntityManagerInterface $em): Response
     {
-        // Acces refusé si on est pas user 
+        // ::::: Acces refusé si on est pas user ::::::
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
         // Vérifie si le Commande existe
         if (!$commande) {
@@ -115,6 +126,21 @@ public function create(Request $request, EntityManagerInterface $em): Response
             [
 
                 'form' => $form, 'Commande' => $commande
+            ]
+        );
+    }
+
+
+    // ::::: gestion des archives :::::::
+    #[Route('/archives', name: 'archives', methods: ['GET'])]
+    public function archives(CommandeRepository $repository): Response
+    {
+        $CommandesArchivees = $repository->findArchived();
+    
+        return $this->render(
+            'admin/webapp/archives.html.twig',
+            [
+                'CommandesArchivees' => $CommandesArchivees,
             ]
         );
     }
@@ -153,4 +179,6 @@ public function create(Request $request, EntityManagerInterface $em): Response
         // Redirection vers la liste des commandes
         return $this->redirectToRoute('admin_webapp_index', status: Response::HTTP_SEE_OTHER);
     }
+
+    
 }

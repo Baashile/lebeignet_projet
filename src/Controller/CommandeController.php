@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class CommandeController extends AbstractController
 {
@@ -35,7 +36,7 @@ class CommandeController extends AbstractController
 
     #[Route('/admin/commandes/archive/{id}', name: 'app_commandes_archive', methods: ['POST'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function archive(int $id, Request $request, CommandeRepository $commandeRepository, EntityManagerInterface $entityManager): JsonResponse
+    public function archive(int $id, Request $request, CommandeRepository $commandeRepository, EntityManagerInterface $entityManager): Response
     {
         $commande = $commandeRepository->find($id);
 
@@ -48,10 +49,10 @@ class CommandeController extends AbstractController
             $commande->setArchived(true);
             $entityManager->flush();
 
-            return new JsonResponse(['status' => 'La commande a bien été archivée'], Response::HTTP_OK);
-        }
+            return new RedirectResponse($this->generateUrl('app_commandes'));
+        }else{
 
-        return new JsonResponse(['status' => 'Action non autorisée'], Response::HTTP_FORBIDDEN);
+        return new JsonResponse(['status' => 'Action non autorisée'], Response::HTTP_FORBIDDEN);}
     }
 
     #[Route('/commandes/{id}', name: 'app_commandes_show')]

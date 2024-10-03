@@ -18,20 +18,36 @@ class CommandeRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->leftJoin('c.client', 'cl')
             ->addSelect('cl')
+            ->where('c.archived = :archived') // Condition sur le champ archived
+            ->setParameter('archived', false) // Paramètre pour archived = false
             ->getQuery()
             ->getResult();
     }
 
+    // renvoie les commandes archivees
     public function findArchived()
     {
         return $this->createQueryBuilder('c')
-            ->innerJoin('c.client', 'cl')
-            ->addSelect('cl')
-            ->where('c.archived = :archived')
-            ->setParameter('archived', true)
+            ->innerJoin('c.client', 'cl') // Joindre le client
+            ->addSelect('cl') // Sélectionner également les informations du client
+            ->where('c.archived = :archived') // Condition sur le champ archived
+            ->setParameter('archived', true) // Paramètre pour archived = true
             ->getQuery()
-            ->getResult();
+            ->getResult(); // Récupérer les résultats
     }
+
+    // renvoie les commandes archivees
+    public function findActived()
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.client', 'cl') // Joindre le client
+            ->addSelect('cl') // Sélectionner également les informations du client
+            ->where('c.archived = :archived') // Condition sur le champ archived
+            ->setParameter('archived', false) // Paramètre pour archived = false
+            ->getQuery()
+            ->getResult(); // Récupérer les résultats
+    }
+
 
     public function archive(Commande $commande): self
     {
