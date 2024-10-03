@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes Archivées{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Commandes Archivées</h1>
+
+    {% if CommandesArchivees is empty %}
+        <p>Aucune commande archivée n'a été trouvée.</p>
+    {% else %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom du Client</th>
+                    <th>État</th>
+                    <th>Date de la Commande</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for commande in CommandesArchivees %}
+                    <tr>
+                        <td>{{ commande.id }}</td>
+                        <td>{{ commande.client.nom }}</td>
+                        <td>{{ commande.etat }}</td>
+                        <td>{{ commande.dateCommande|date('d/m/Y') }}</td>
+                        <td>
+                            <a href="{{ path('app_commandes_show', {'id': commande.id}) }}" class="btn btn-info">Détails</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <a href="{{ path('app_commandes') }}" class="btn btn-secondary">Retour à la liste des commandes</a>
+</div>
+{% endblock %}
